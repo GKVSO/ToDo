@@ -15,7 +15,7 @@ class Task {
     constructor(name, {
         project = false,
         tag = false,
-        dateCreate = new Date, //TODO: Если дата не задана вручную, сделать это автоматически
+        dateCreate = new Date,
         deadline = false,
         importance = 0,
         description = false,
@@ -63,10 +63,142 @@ class Task {
     }
 }
 
-const test = new Task('Task one', {
-    project: 'Name project',
-    tag: 'Name tag',
-    dateCreate: new Date(),
-    importance: 1,
-    description: 'Description description',
-})
+
+/**
+ * Конструктор для создания ToDo
+ *
+ * @param {string} name - Название todo
+ * */
+class ToDo {
+    /**
+     * Объект для хранения задач
+     *
+     * @type {Map}
+     * @private
+     * */
+    _taskList = {};
+
+    /**
+     * Массив для хранения проектов
+     *
+     * @type {Array}
+     * @private
+     * */
+    _projectList = [];
+
+    /**
+     * Массив для хранения меток
+     *
+     * @type {Array}
+     * @private
+     * */
+    _tagList = [];
+
+    constructor(name) {
+        this.name = name;
+    }
+
+    /**
+     * Добавляет задачу в список задач
+     * @param {object} task - Объект задачи ( Экземпляр класса Task )
+     * */
+    addTaskList(task) {
+
+    }
+
+    /**
+     * Удаляет задачу из списка задач
+     * @param {string} idTask - Идентификатор задачи
+     * */
+    deleteTask(idTask) {}
+
+    /**
+     * Изменятет парамметры задачи
+     * @param {string} idTask - Идентификатор задачи
+     * @param {object} params - Объект с парамметрами задачи
+     * */
+    editTask(idTask, params) {}
+
+    /**
+     * Создате задачу
+     * @param {string} name - Имя задачи
+     * @param {object} params - Парраметры задачи
+     * */
+    createTask(name, params) {}
+
+    /**
+     * Возвращает объект задачи
+     * @param {string} idTask - Идентификатор задачи
+     * @return {object} - Возращает объект задачи
+     * */
+    getTask(idTask) {}
+
+    /**
+     * Добавляет проект в список проектов
+     * @param {string} project - Название проекта
+     * */
+    addProjectList(project) {
+
+    }
+
+    /**
+     * Удаляет проект из списка проектов
+     * @param {string} project - Название проекта
+     * */
+    deleteProject(project) {}
+
+    /**
+     * Изменятет проект
+     * @param {string} project - Название проекта
+     * @param {object} params - Объект с парамметрами проекта
+     * @param {string} [params.name] - Новое название проекта
+     * */
+    editProject(project, params) {}
+
+    /**
+     * Создате проект
+     * @param {string} name - Название проекта
+     * */
+    createProject(name) {}
+
+    /**
+     * Возвращает проект
+     * @param {string} project - Название проекта
+     * */
+    getProject(project) {}
+
+
+    /**
+     * Добавляет метку в список меток
+     * @param {string} project - Название метки
+     * */
+    addTagList(project) {
+
+    }
+
+    /**
+     * Удаляет метку из списка меток
+     * @param {string} project - Название метки
+     * */
+    deleteTag(project) {}
+
+    /**
+     * Изменятет метку
+     * @param {string} project - Название метки
+     * @param {object} params - Объект с парамметрами метки
+     * @param {string} [params.name] - Новое название метки
+     * */
+    editTag(project, params) {}
+
+    /**
+     * Создате метку
+     * @param {string} name - Название метки
+     * */
+    createTag(name) {}
+
+    /**
+     * Возвращает метку
+     * @param {string} project - Название метки
+     * */
+    getTag(project) {}
+}
