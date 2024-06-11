@@ -81,18 +81,18 @@ class ToDo {
     /**
      * Массив для хранения проектов
      *
-     * @type {Array}
+     * @type {Set}
      * @private
      * */
-    _projectList = [];
+    _projectList = new Set();
 
     /**
      * Массив для хранения меток
      *
-     * @type {Array}
+     * @type {Set}
      * @private
      * */
-    _tagList = [];
+    _tagList = new Set();
 
     constructor(name) {
         this.name = name;
