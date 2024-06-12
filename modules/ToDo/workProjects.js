@@ -1,28 +1,23 @@
-/** @module WorkProjects */
-
-export {WorkProjects as default};
+/** @module workProjects */
+export {workProjects as default};
 
 /**
- * Класс с методами для работы с проектами в классе ToDo
+ * Примесь с методами для работы с проектами
  * */
-class WorkProjects {
-    constructor() {
-
-    }
-
+const workProjects = {
     /**
      * Добавляет проект в список проектов
      * @param {string} project - Название проекта
      * */
     addProjectList(project) {
 
-    }
+    },
 
     /**
      * Удаляет проект из списка проектов
      * @param {string} project - Название проекта
      * */
-    deleteProject(project) {}
+    deleteProject(project) {},
 
     /**
      * Изменятет проект
@@ -30,17 +25,17 @@ class WorkProjects {
      * @param {object} params - Объект с парамметрами проекта
      * @param {string} [params.name] - Новое название проекта
      * */
-    editProject(project, params) {}
+    editProject(project, params) {},
 
     /**
      * Создате проект
      * @param {string} name - Название проекта
      * */
-    createProject(name) {}
+    createProject(name) {},
 
     /**
      * Возвращает проект
      * @param {string} project - Название проекта
      * */
-    getProject(project) {}
+    getProject(project) {},
 }

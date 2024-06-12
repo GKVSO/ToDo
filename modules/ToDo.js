@@ -1,6 +1,9 @@
 /** @module ToDo */
-
 export {ToDo as default};
+
+import workProjects from "./ToDo/workProjects.js";
+import workTasks from "./ToDo/workTasks.js";
+import workTags from "./ToDo/workTags.js";
 
 /**
  * Конструктор для создания ToDo
@@ -36,3 +39,5 @@ class ToDo {
         this.name = name;
     }
 }
+
+Object.assign(ToDo.prototype, workTasks, workProjects, workTags)
