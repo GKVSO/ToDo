@@ -7,16 +7,28 @@ export {workTags as default};
 const workTags =  {
 
     /**
+     * Массив для хранения меток
+     *
+     * @type {Set}
+     * @private
+     * */
+    _tagList: new Set(),
+
+    /**
      * Добавляет метку в список меток
      * @param {string} project - Название метки
      * */
-    addTagList(project) {},
+    addTagList(project) {
+        this._tagList.add(project);
+    },
 
     /**
      * Удаляет метку из списка меток
      * @param {string} project - Название метки
      * */
-    deleteTag(project) {},
+    deleteTag(project) {
+        this._tagList.delete(project);
+    },
 
     /**
      * Изменятет метку
@@ -24,19 +36,26 @@ const workTags =  {
      * @param {object} params - Объект с парамметрами метки
      * @param {string} [params.name] - Новое название метки
      * */
-    editTag(project, params) {},
+    editTag(project, params) {
+        this._tagList.delete(project);
+        this._tagList.add(newName);
+    },
 
     /**
      * Создате метку
      * @param {string} name - Название метки
      * */
-    createTag(name) {},
+    createTag(name) {
+        this._tagList.add(name);
+    },
 
     /**
      * Возвращает метку
      * @param {string} project - Название метки
      * */
-    getTag(project) {},
+    getTag(project) {
+        return this._tagList;
+    },
 }
 /** @module WorkTags */
 

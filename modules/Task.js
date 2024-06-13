@@ -64,5 +64,44 @@ class Task {
          * @type {object|boolean}
          * */
         this.subTask = subTask;
+
+        /**
+         * @type {string}
+         * */
+        this.id = this.generateId(this.name);
+    }
+
+    /**
+     * Создает уникальный идентификатор для задачи
+     * */
+    generateId(name) {
+        const dateKey = Date.now();
+
+        const randomNumberList = this.random(0, name.length-1, 3);
+        const nameKey = randomNumberList.reduce((acc, value) => {
+            return acc += name[value];
+        }, 0);
+
+        const resultId = dateKey + nameKey;
+        return resultId;
+    }
+
+    /**
+     * Возращает рандомные числа, указанное число раз
+     * @param {string} min - Минимальное число
+     * @param {string} max - Максимальное число
+     * @param {string} count - Кол-во рандомных чисел
+     * @return {string|array}
+     * */
+    random(min, max, count = 1) {
+        let randomNumberList = [];
+
+        for(let i = 0; i < count; i++) {
+            const randomNumber = Math.round(Math.random() * (max - min) + min);
+            randomNumberList.push(randomNumber);
+        }
+
+        if(randomNumberList.length == 1) return randomNumberList[0];
+        return randomNumberList;
     }
 }

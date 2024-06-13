@@ -6,36 +6,52 @@ export {workProjects as default};
  * */
 const workProjects = {
     /**
+     * Массив для хранения проектов
+     *
+     * @type {Set}
+     * @private
+     * */
+    _projectList: new Set(),
+
+    /**
      * Добавляет проект в список проектов
      * @param {string} project - Название проекта
      * */
     addProjectList(project) {
-
+        this._projectList.add(project);
     },
 
     /**
      * Удаляет проект из списка проектов
      * @param {string} project - Название проекта
      * */
-    deleteProject(project) {},
+    deleteProject(project) {
+        this._projectList.delete(project);
+    },
 
     /**
      * Изменятет проект
      * @param {string} project - Название проекта
-     * @param {object} params - Объект с парамметрами проекта
-     * @param {string} [params.name] - Новое название проекта
+     * @param {object} newName - Новое название
      * */
-    editProject(project, params) {},
+    editProject(project, newName) {
+        this._projectList.delete(project);
+        this._projectList.add(newName);
+    },
 
     /**
      * Создате проект
      * @param {string} name - Название проекта
      * */
-    createProject(name) {},
+    createProject(name) {
+        this._projectList.add(name);
+    },
 
     /**
      * Возвращает проект
      * @param {string} project - Название проекта
      * */
-    getProject(project) {},
+    getProjects(project) {
+        return this._projectList;
+    },
 }
