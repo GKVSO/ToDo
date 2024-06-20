@@ -51,11 +51,6 @@ class Task {
         this.deadline = deadline;
 
         /**
-         * @type {number}
-         * */
-        this.importance = importance;
-
-        /**
          * @type {string|boolean}
          * */
         this.description = description;
@@ -69,6 +64,12 @@ class Task {
          * @type {string}
          * */
         this.id = this.generateId(this.name);
+
+        /**
+         * @type {number}
+         * */
+        this._importance = [0, 1, 2, 3].includes(importance) ? importance : 0;
+        this._importance = importance;
     }
 
     /**
@@ -103,5 +104,22 @@ class Task {
 
         if(randomNumberList.length == 1) return randomNumberList[0];
         return randomNumberList;
+    }
+
+    /**
+     * Устанавливает свойству _importance значение
+     * @param {number} value - Значение приоритета от 0 до 3
+     * */
+    set importance(value) {
+        if(![0, 1, 2, 3].includes(value)) return false;
+
+        this._importance = value;
+    }
+
+    /**
+     * Получает значение свойства _importance
+     * */
+    get importance() {
+        return this._importance;
     }
 }
