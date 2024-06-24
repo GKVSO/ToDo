@@ -89,7 +89,13 @@ class ToDo {
 
         function or() {
             const result = arrTasks.filter((task) => {
-                return task.some(el => arrFilters.includes(el));
+                const arrFilters = Object.entries(filters);
+
+                return arrFilters.some((el) => {
+                    const [key, value] = el;
+
+                    return task[key] == value;
+                })
             })
 
             return result;
@@ -97,7 +103,13 @@ class ToDo {
 
         function and() {
             const result = arrTasks.filter((task) => {
-                return task.includes(arrFilters);
+                const arrFilters = Object.entries(filters);
+
+                return arrFilters.every((el) => {
+                    const [key, value] = el;
+
+                    return task[key] == value;
+                })
             })
 
             return result;
@@ -105,7 +117,13 @@ class ToDo {
 
         function orNot() {
             const result = arrTasks.filter((task) => {
-                return task.some(el => !arrFilters.includes(el));
+                const arrFilters = Object.entries(filters);
+
+                return arrFilters.some((el) => {
+                    const [key, value] = el;
+
+                    return task[key] !== value;
+                })
             })
 
             return result;
@@ -113,14 +131,19 @@ class ToDo {
 
         function andNot() {
             const result = arrTasks.filter((task) => {
-                return !task.includes(arrFilters);
+                const arrFilters = Object.entries(filters);
+
+                return arrFilters.every((el) => {
+                    const [key, value] = el;
+
+                    return task[key] !== value;
+                })
             })
 
-            return result
+            return result;
         }
 
         const arrTasks = Object.values(this._taskList);
-        const arrFilters = Object.entries(filters);
         let resultTasks;
 
         switch (strong) {
@@ -142,6 +165,90 @@ class ToDo {
         }
 
         return resultTasks;
+    }
+
+    getTask(filters, {
+        strong = 'or'
+    }) {
+        function or() {
+            for(const task of arrTasks) {
+                const isMatch = arrFilters.some((el) => {
+                    const [key, value] = el;
+
+                    return task[key] == value;
+                })
+
+                if(isMatch) return task;
+            }
+
+            return undefined;
+        }
+
+        function and() {
+            for(const task of arrTasks) {
+                const isMatch = arrFilters.every((el) => {
+                    const [key, value] = el;
+
+                    return task[key] == value;
+                })
+
+                if(isMatch) return task;
+            }
+
+            return undefined;
+        }
+
+        function orNot() {
+            for(const task of arrTasks) {
+                const isMatch = arrFilters.some((el) => {
+                    const [key, value] = el;
+
+                    return task[key] !== value;
+                })
+
+                if(isMatch) return task;
+            }
+
+            return undefined;
+        }
+
+        function andNot() {
+            for(const task of arrTasks) {
+                const isMatch = arrFilters.every((el) => {
+                    const [key, value] = el;
+
+                    return task[key] !== value;
+                })
+
+                if(isMatch) return task;
+            }
+
+            return undefined;
+        }
+
+        const arrTasks = Object.values(this._taskList);
+        const arrFilters = Object.entries(filters);
+        let resultTask;
+
+        switch (strong) {
+            case 'or':
+                resultTask = or();
+                break;
+            case 'and':
+                resultTask = and();
+                break;
+            case 'orNot':
+                resultTask = orNot();
+                break;
+            case 'andNot':
+                resultTask = andNot();
+                break;
+            default:
+                resultTask = or();
+                break;
+        }
+
+        return resultTask;
     }
 }
 
