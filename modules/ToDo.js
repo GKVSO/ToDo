@@ -19,8 +19,6 @@ class ToDo {
      * */
     _taskList = {};
 
-
-
     constructor(name) {
         this.name = name;
     }
@@ -70,8 +68,80 @@ class ToDo {
         return this._taskList[idTask];
     }
 
-    getAllTasks() {
-        return this._taskList;
+    /**
+     * Возращает массив с объектами задач
+     * @return {array} - Массив с объектами задач
+     * */
+    getTaskList() {
+        return Object.values(this._taskList);
+    }
+
+    /**
+     * Возращает массив с объектами задач c указанными парамметрами
+     * @param {object} filters - Объект с ключами по которым будут искаться задачи
+     * @param {object} params - Объект с парамметрами поиска
+     * @param {string} params.strong - and | or | andNot | andOr
+     * */
+    getTasks(filters = false, {
+        strong = 'or'
+    }) {
+        if(filters === false) return this.getTaskList();
+
+        function or() {
+            const result = arrTasks.filter((task) => {
+                return task.some(el => arrFilters.includes(el));
+            })
+
+            return result;
+        }
+
+        function and() {
+            const result = arrTasks.filter((task) => {
+                return task.includes(arrFilters);
+            })
+
+            return result;
+        }
+
+        function orNot() {
+            const result = arrTasks.filter((task) => {
+                return task.some(el => !arrFilters.includes(el));
+            })
+
+            return result;
+        }
+
+        function andNot() {
+            const result = arrTasks.filter((task) => {
+                return !task.includes(arrFilters);
+            })
+
+            return result
+        }
+
+        const arrTasks = Object.values(this._taskList);
+        const arrFilters = Object.entries(filters);
+        let resultTasks;
+
+        switch (strong) {
+            case 'or':
+                resultTasks = or();
+                break;
+            case 'and':
+                resultTasks = and();
+                break;
+            case 'orNot':
+                resultTasks = orNot();
+                break;
+            case 'andNot':
+                resultTasks = andNot();
+                break;
+            default:
+                resultTasks = or();
+                break;
+        }
+
+        return resultTasks;
     }
 }
 
