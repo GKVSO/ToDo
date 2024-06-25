@@ -23,6 +23,16 @@ class ToDo {
         this.name = name;
     }
 
+    static taskArrayToObject(taskArray) {
+        const resultObject = {};
+
+        for(const task of taskArray) {
+            resultObject[task.id] = task;
+        }
+
+        return resultObject;
+    }
+
     /**
      * Добавляет задачу в список задач
      * @param {object} task - Объект задачи ( Экземпляр класса Task )
@@ -78,93 +88,112 @@ class ToDo {
 
     /**
      * Возращает массив с объектами задач c указанными парамметрами
-     * @param {object} filters - Объект с ключами по которым будут искаться задачи
-     * @param {object} params - Объект с парамметрами поиска
-     * @param {string} params.strong - and | or | andNot | andOr
+     * @param {Object} params - Объект с парамметрами поиска задач
+     * @param {Object} params.filter - Объект с парамметрами фильтра
+     * @param {Object|Boolean} params.filter.keysFilter - Ключи по которым будут фильроваться задачи
+     * @param {String} params.filter.strong - Тип поиска and | or | andNot | andOr
+     * @param {Object} params.sort - Парамметры для сортировки
+     * @param {String} params.sort.sortDirection - Тип сортировки ascending | descending
+     * @return {Object} - Возращает объект с задачами по типу {idTask:task}
      * */
-    getTasks(filters = false, {
-        strong = 'or'
-    }) {
-        if(filters === false) return this.getTaskList();
+    getTasks({
+         filter = {},
+         sort = {}
+    } = {}) {
+        const {keysFilter, strong= 'or'} = filter;
+        const {sortDirection = 'ascending', param = 'name'} = sort;
 
-        function or() {
-            const result = arrTasks.filter((task) => {
-                const arrFilters = Object.entries(filters);
+        const isSort = Object.keys(sort).length == 0 ? false : true;
+        const isFilter = Object.keys(filter).length == 0 ? false : true;
 
-                return arrFilters.some((el) => {
-                    const [key, value] = el;
-
-                    return task[key] == value;
-                })
-            })
-
-            return result;
-        }
-
-        function and() {
-            const result = arrTasks.filter((task) => {
-                const arrFilters = Object.entries(filters);
-
-                return arrFilters.every((el) => {
-                    const [key, value] = el;
-
-                    return task[key] == value;
-                })
-            })
-
-            return result;
-        }
-
-        function orNot() {
-            const result = arrTasks.filter((task) => {
-                const arrFilters = Object.entries(filters);
-
-                return arrFilters.some((el) => {
-                    const [key, value] = el;
-
-                    return task[key] !== value;
-                })
-            })
-
-            return result;
-        }
-
-        function andNot() {
-            const result = arrTasks.filter((task) => {
-                const arrFilters = Object.entries(filters);
-
-                return arrFilters.every((el) => {
-                    const [key, value] = el;
-
-                    return task[key] !== value;
-                })
-            })
-
-            return result;
-        }
-
-        const arrTasks = Object.values(this._taskList);
         let resultTasks;
 
-        switch (strong) {
-            case 'or':
-                resultTasks = or();
-                break;
-            case 'and':
-                resultTasks = and();
-                break;
-            case 'orNot':
-                resultTasks = orNot();
-                break;
-            case 'andNot':
-                resultTasks = andNot();
-                break;
-            default:
-                resultTasks = or();
-                break;
+        if(isFilter) {
+            function or() {
+                const result = arrTasks.filter((task) => {
+                    const arrFilters = Object.entries(keysFilter);
+
+                    return arrFilters.some((el) => {
+                        const [key, value] = el;
+
+                        return task[key] == value;
+                    })
+                })
+
+                return result;
+            }
+
+            function and() {
+                const result = arrTasks.filter((task) => {
+                    const arrFilters = Object.entries(keysFilter);
+
+                    return arrFilters.every((el) => {
+                        const [key, value] = el;
+
+                        return task[key] == value;
+                    })
+                })
+
+                return result;
+            }
+
+            function orNot() {
+                const result = arrTasks.filter((task) => {
+                    const arrFilters = Object.entries(keysFilter);
+
+                    return arrFilters.some((el) => {
+                        const [key, value] = el;
+
+                        return task[key] !== value;
+                    })
+                })
+
+                return result;
+            }
+
+            function andNot() {
+                const result = arrTasks.filter((task) => {
+                    const arrFilters = Object.entries(keysFilter);
+
+                    return arrFilters.every((el) => {
+                        const [key, value] = el;
+
+                        return task[key] !== value;
+                    })
+                })
+
+                return result;
+            }
+
+            const arrTasks = Object.values(this._taskList);
+
+
+            switch (strong) {
+                case 'or':
+                    resultTasks = or();
+                    break;
+                case 'and':
+                    resultTasks = and();
+                    break;
+                case 'orNot':
+                    resultTasks = orNot();
+                    break;
+                case 'andNot':
+                    resultTasks = andNot();
+                    break;
+                default:
+                    resultTasks = or();
+                    break;
+            }
+        } else {
+            resultTasks = this.getTaskList()
         }
 
-        return resultTasks;
+        if(isSort !== false) {
+            resultTasks = this.sort(resultTasks, {sortDirection, param})
+        }
+
+        return ToDo.taskArrayToObject(resultTasks);
     }
 
     getTask(filters, {
@@ -248,7 +277,52 @@ class ToDo {
                 break;
         }
 
-        return resultTask;
+        return ToDO.taskArrayToObject(resultTask);
+    }
+
+    /**
+     * Метод для сортировки
+     * @param {Array} taskArray - Массив с задачами
+     * @param {Object} paramsSort - Объект с парамметрами сортировки
+     * @param {String} paramsSort.param - Парамметр по которому будет производиться сортировка
+     * @param {String} paramsSort.sortDirection - Указывает сортировка должна быть восходящая или убывающая : ascending | descending
+     * @return {Object} Возращает объект с задачами по типу {idTask:task}
+     * */
+    sort(taskArray, paramsSort) {
+        function ascending(a, b) {
+            if(a > b) {
+                return 1;
+            } else if(a <  b) {
+                return -1;
+            } else {
+                return 0;
+            }
+        }
+
+        function descending(a, b) {
+            if(a > b) {
+                return -1;
+            } else if(a <  b) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+
+        return taskArray.sort((a, b) => {
+            switch (paramsSort.sortDirection) {
+                case 'ascending':
+                    return ascending(a[paramsSort.param], b[paramsSort.param]);
+                    break;
+                case 'descending':
+                    return descending(a[paramsSort.param], b[paramsSort.param]);
+                    break;
+                default:
+                    return ascending(a[paramsSort.param], b[paramsSort.param]);
+                    break;
+
+            }
+        })
     }
 }
 
